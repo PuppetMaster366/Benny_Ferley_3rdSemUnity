@@ -15,12 +15,9 @@ public class Movement : MonoBehaviour
 	private GameObject newBullet;
 	private Vector2 worldMousePosition;
 	private Vector2 shootDirection;
-	private float bulletSpeed = 25f;
-	private bool canShoot = true;
-	private float cooldownTime = 1f;
+	private float bulletSpeed = 20f;
 
 	private float moveSpeed = 400;
-	private float sprintMultiplier = 1;
 	private Vector2 inputValue;
 
 	private void Update()
@@ -29,7 +26,7 @@ public class Movement : MonoBehaviour
 	}
 	private void FixedUpdate()
 	{
-		playerRb.velocity = inputValue * moveSpeed * sprintMultiplier * Time.deltaTime;
+		playerRb.velocity = inputValue * moveSpeed * Time.deltaTime;
 
 		//animator.SetFloat("moveValueX", inputValue.x);
 		//animator.SetFloat("moveValueY", inputValue.y);
@@ -41,11 +38,10 @@ public class Movement : MonoBehaviour
 
 	public void Shoot(InputAction.CallbackContext context)
 	{
-		if (context.performed && canShoot)
+		if (context.performed)
 		{
 			newBullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
 			newBullet.GetComponent<Rigidbody2D>().AddForce(shootDirection * bulletSpeed, ForceMode2D.Impulse);
-			canShoot = false;
 		}
 	}
 

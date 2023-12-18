@@ -28,13 +28,22 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
             ""id"": ""77fa8e58-be41-4048-8fb4-4271ef86da8d"",
             ""actions"": [
                 {
-                    ""name"": ""Player"",
+                    ""name"": ""Movement"",
                     ""type"": ""Value"",
                     ""id"": ""711f785b-252d-416b-ba83-1faa63bcff80"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Shooting"",
+                    ""type"": ""Button"",
+                    ""id"": ""6f0a64e2-8ecd-4ff3-9b26-78495501456e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -45,7 +54,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Player"",
+                    ""action"": ""Movement"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -56,7 +65,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Player"",
+                    ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -67,7 +76,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Player"",
+                    ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -78,7 +87,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Player"",
+                    ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -89,9 +98,20 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Player"",
+                    ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0e530d53-d7da-4f2d-8226-9e041eac0585"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shooting"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -100,7 +120,8 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
 }");
         // MovementControl
         m_MovementControl = asset.FindActionMap("MovementControl", throwIfNotFound: true);
-        m_MovementControl_Player = m_MovementControl.FindAction("Player", throwIfNotFound: true);
+        m_MovementControl_Movement = m_MovementControl.FindAction("Movement", throwIfNotFound: true);
+        m_MovementControl_Shooting = m_MovementControl.FindAction("Shooting", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -162,12 +183,14 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     // MovementControl
     private readonly InputActionMap m_MovementControl;
     private List<IMovementControlActions> m_MovementControlActionsCallbackInterfaces = new List<IMovementControlActions>();
-    private readonly InputAction m_MovementControl_Player;
+    private readonly InputAction m_MovementControl_Movement;
+    private readonly InputAction m_MovementControl_Shooting;
     public struct MovementControlActions
     {
         private @InputMap m_Wrapper;
         public MovementControlActions(@InputMap wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Player => m_Wrapper.m_MovementControl_Player;
+        public InputAction @Movement => m_Wrapper.m_MovementControl_Movement;
+        public InputAction @Shooting => m_Wrapper.m_MovementControl_Shooting;
         public InputActionMap Get() { return m_Wrapper.m_MovementControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -177,16 +200,22 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_MovementControlActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_MovementControlActionsCallbackInterfaces.Add(instance);
-            @Player.started += instance.OnPlayer;
-            @Player.performed += instance.OnPlayer;
-            @Player.canceled += instance.OnPlayer;
+            @Movement.started += instance.OnMovement;
+            @Movement.performed += instance.OnMovement;
+            @Movement.canceled += instance.OnMovement;
+            @Shooting.started += instance.OnShooting;
+            @Shooting.performed += instance.OnShooting;
+            @Shooting.canceled += instance.OnShooting;
         }
 
         private void UnregisterCallbacks(IMovementControlActions instance)
         {
-            @Player.started -= instance.OnPlayer;
-            @Player.performed -= instance.OnPlayer;
-            @Player.canceled -= instance.OnPlayer;
+            @Movement.started -= instance.OnMovement;
+            @Movement.performed -= instance.OnMovement;
+            @Movement.canceled -= instance.OnMovement;
+            @Shooting.started -= instance.OnShooting;
+            @Shooting.performed -= instance.OnShooting;
+            @Shooting.canceled -= instance.OnShooting;
         }
 
         public void RemoveCallbacks(IMovementControlActions instance)
@@ -206,6 +235,7 @@ public partial class @InputMap: IInputActionCollection2, IDisposable
     public MovementControlActions @MovementControl => new MovementControlActions(this);
     public interface IMovementControlActions
     {
-        void OnPlayer(InputAction.CallbackContext context);
+        void OnMovement(InputAction.CallbackContext context);
+        void OnShooting(InputAction.CallbackContext context);
     }
 }

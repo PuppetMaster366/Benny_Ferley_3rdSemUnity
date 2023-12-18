@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: 3e70128342082174f85681ce757a0d9d
   - enabled: 1
+    path: Assets/Benny_Ferley_Abgabe_3rdSem.unity
+    guid: 9a14860c10f66954c85b955214c0d6ef
+  - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
