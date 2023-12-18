@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-	[SerializeField] private GameObject gameOverCanvas;
+	private GameObject gameOverCanvas;
+	private void Start()
+	{
+		gameOverCanvas = GameObject.FindWithTag("GameOver");
+	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
